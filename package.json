@@ -1,0 +1,17 @@
+{
+  "name": "taxivaldoise",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "images": "node scripts/optimize-images.mjs",
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs && node scripts/serve.mjs",
+    "test": "node scripts/test-send.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.0"
+  },
+  "dependencies": {
+    "nodemailer": "^10.3.1"
+  }
+}
