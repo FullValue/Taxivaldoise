@@ -257,17 +257,20 @@ export const marquee = (logos, { repeat = 3, duration = 40, small = false } = {}
   return `<div class="marquee${small ? ' marquee--small' : ''}" style="--dur:${duration}s"><div class="marquee__track">${group(false)}${group(true)}</div></div>`;
 };
 
-export const assuranceMarquee = () => marquee([{ name: 'logo-assurance-maladie', alt: 'L’Assurance Maladie' }], { repeat: 8, duration: 28, small: true });
+const PARTNER_LOGOS = [
+  { name: 'logo-assurance-maladie-2', alt: 'L’Assurance Maladie' },
+  { name: 'logo-mgen', alt: 'MGEN' },
+  { name: 'logo-camieg', alt: 'Camieg' },
+  { name: 'logo-msa', alt: 'MSA' },
+];
+
+// Même chaîne de logos que « Nos partenaires », en format réduit.
+export const assuranceMarquee = () => marquee(PARTNER_LOGOS, { repeat: 4, duration: 34, small: true });
 
 export const partners = () => `
 <section class="section section--tight partners">
   <h2>Nos partenaires</h2>
-  ${marquee([
-    { name: 'logo-assurance-maladie-2', alt: 'L’Assurance Maladie' },
-    { name: 'logo-mgen', alt: 'MGEN' },
-    { name: 'logo-camieg', alt: 'Camieg' },
-    { name: 'logo-msa', alt: 'MSA' },
-  ], { repeat: 4 })}
+  ${marquee(PARTNER_LOGOS, { repeat: 4 })}
 </section>`;
 
 export const callCard = (title = '24h/24, 7j/7') => `
