@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PAGES, SITEMAP } from '../src/pages.mjs';
+import { SITE } from '../src/components.mjs';
 
 const OUT = process.argv[2] || 'dist';
 // --fast : conserve les images déjà copiées pour accélérer les builds répétés
@@ -28,7 +29,7 @@ fs.copyFileSync('src/js/site.js', `${OUT}/assets/site.js`);
 const today = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(`${OUT}/sitemap.xml`, `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${SITEMAP.map((p) => `  <url><loc>https://taxivaldoise.fr${p}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
+${SITEMAP.map((p) => `  <url><loc>${SITE.url}${p}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
 </urlset>
 `);
 console.log(`dist/ : ${Object.keys(PAGES).length} pages`);

@@ -4,7 +4,9 @@ import fs from 'node:fs';
 const images = JSON.parse(fs.readFileSync(new URL('./images.json', import.meta.url)));
 
 export const SITE = {
-  url: 'https://taxivaldoise.fr',
+  url: 'https://www.taxivaldoise.fr',
+  // Ajouter ici les URL publiques : fiche Google, Facebook, Pages Jaunes, etc.
+  sameAs: [],
   name: 'TaxiValdoise',
   email: 'contact@taxivaldoise.fr',
   phones: [
@@ -49,9 +51,10 @@ const tel = (p) => `<a href="tel:${p.tel}">${p.label}</a>`;
 
 const NAV = [
   ['/', 'Accueil'],
+  ['/taxipmr', 'Taxi PMR'],
   ['/taximedicalise', 'Taxi Conventionné'],
   ['/taxiprive', 'Taxi Privé'],
-  ['/taxipmr', 'Taxi PMR'],
+  ['/zones-desservies', 'Zones'],
   ['/blog', 'Blog'],
   ['/contact', 'Contact'],
 ];
@@ -88,6 +91,10 @@ const header = (path, bookHref) => `
   </div>
 </div></header>`;
 
+const FOOT_SERVICES = [['/taxipmr', 'Transport PMR'], ['/transport-fauteuil-roulant-95', 'Taxi fauteuil roulant'], ['/transport-personnes-agees-95', 'Transport personnes âgées'], ['/taximedicalise', 'Taxi conventionné'], ['/taxi-dialyse-95', 'Taxi dialyse'], ['/taxi-chimiotherapie-radiotherapie-95', 'Taxi chimio et radiothérapie'], ['/bon-de-transport-cpam', 'Bon de transport CPAM']];
+const FOOT_ZONES = [['pontoise', 'Pontoise'], ['cergy', 'Cergy'], ['argenteuil', 'Argenteuil'], ['gonesse', 'Gonesse'], ['sarcelles', 'Sarcelles'], ['eaubonne', 'Eaubonne'], ['ermont', 'Ermont']];
+const links = (items) => items.map(([h, l]) => `<li><a href="${h}">${l}</a></li>`).join('');
+
 const footer = (bookHref) => `
 <footer class="site-footer"><div class="wrap">
   <div class="foot">
@@ -96,20 +103,22 @@ const footer = (bookHref) => `
       <p>Transport de personnes à mobilité réduite (PMR), médical conventionné (CPAM) et taxi privé sur mesure. Disponibilité 24h/24, 7j/7. Confort, ponctualité, prise en charge complète.</p>
     </div>
     <div>
-      <h2>Liens utiles</h2>
-      <ul>
-        <li><a href="/taximedicalise">Taxi Conventionné</a></li>
-        <li><a href="/taxiprive">Taxi Privé</a></li>
-        <li><a href="/taxipmr">Taxi PMR</a></li>
-        <li><a href="/contact">Contact</a></li>
-        <li><a href="/blog">Blog</a></li>
-      </ul>
+      <h2>Nos services</h2>
+      <ul>${links(FOOT_SERVICES)}<li><a href="/taxiprive">Taxi privé</a></li></ul>
+    </div>
+    <div>
+      <h2>Zones desservies</h2>
+      <ul>${links(FOOT_ZONES.map(([s, n]) => [`/transport-pmr-${s}`, `Taxi PMR ${n}`]))}<li><a href="/zones-desservies">Toutes les zones</a></li></ul>
     </div>
     <div>
       <h2>Contact</h2>
       <ul>
         ${SITE.phones.map((p) => `<li>${tel(p)}</li>`).join('')}
         <li><a href="${MAILTO}">Contacter par mail</a></li>
+        <li><a href="/contact">Page contact</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li>Val-d’Oise (95), Île-de-France</li>
+        <li>Ouvert 24h/24, 7j/7</li>
       </ul>
     </div>
   </div>
@@ -126,9 +135,12 @@ const footer = (bookHref) => `
   <a class="btn" href="${bookHref}">Réserver</a>
 </div>`;
 
-export function layout({ path, title, description, body, bookHref = '#reserver', jsonld = [], noindex = false, ogType = 'website' }) {
+export function layout({ path, title, description, body, bookHref = '#reserver', jsonld = [], noindex = false, ogType = 'website', breadcrumb }) {
   const canonical = SITE.url + (path === '/' ? '/' : path);
-  const graph = [...jsonld].map((o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`).join('\n');
+  // Fil d'Ariane structuré : déduit du titre si la page n'en fournit pas.
+  const trail = path === '/' || noindex ? null : (breadcrumb || [[title.split(' | ')[0], path]]);
+  const crumbLd = trail ? [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [['Accueil', '/'], ...trail].map(([name, p], i) => ({ '@type': 'ListItem', position: i + 1, name, item: SITE.url + p })) }] : [];
+  const graph = [...jsonld, ...crumbLd].map((o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`).join('\n');
   return `<!doctype html>
 <html lang="fr">
 <head>
@@ -136,7 +148,8 @@ export function layout({ path, title, description, body, bookHref = '#reserver',
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${canonical}">`}
+${noindex ? '<meta name="robots" content="noindex">' : `<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="${canonical}">`}
 <meta property="og:locale" content="fr_FR">
 <meta property="og:type" content="${ogType}">
 <meta property="og:site_name" content="TaxiValdoise">

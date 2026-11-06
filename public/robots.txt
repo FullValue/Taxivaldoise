@@ -1,6 +1,5 @@
 User-agent: *
+Allow: /
 Disallow: /api/
-Disallow: /merci
-Disallow: /erreur
 
-Sitemap: https://taxivaldoise.fr/sitemap.xml
+Sitemap: https://www.taxivaldoise.fr/sitemap.xml

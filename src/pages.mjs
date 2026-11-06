@@ -4,20 +4,7 @@ import {
   SITE, MAILTO, layout, img, icon, head, pageHero, svcCard, HOME_SERVICES, steps, testimonials, partners, callCard,
   contactCards, ctaFinal, faq, ticks, bookingForm, contactForm, bookingSection, assuranceMarquee,
 } from './components.mjs';
-
-const business = {
-  '@context': 'https://schema.org',
-  '@type': 'TaxiService',
-  '@id': `${SITE.url}/#entreprise`,
-  name: 'TaxiValdoise',
-  url: SITE.url,
-  image: `${SITE.url}/assets/img/og-image.jpg`,
-  telephone: SITE.phones[0].tel,
-  email: SITE.email,
-  description: 'Transport PMR, taxi conventionné CPAM et taxi privé dans le Val-d’Oise et en Île-de-France, 24h/24 et 7j/7.',
-  areaServed: [{ '@type': 'AdministrativeArea', name: 'Val-d’Oise' }, { '@type': 'AdministrativeArea', name: 'Île-de-France' }],
-  provider: { '@type': 'Organization', name: 'TaxiValdoise', url: SITE.url },
-};
+import { business, zonesSection, LOCAL_PAGES, LOCAL_SITEMAP } from './local.mjs';
 
 const stripTags = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 
@@ -50,8 +37,8 @@ function home() {
   <div class="wrap">
     <div class="hero__text">
       <span class="eyebrow hero-in" style="--d:0s">Votre confort, notre priorité</span>
-      <h1 class="hero-in" style="--d:.08s">Transport PMR, Conventionné <span class="nowrap">&amp; Privé <em>24/7</em></span></h1>
-      <p class="hero__lead hero-in" style="--d:.16s">Réservez facilement votre taxi PMR, conventionné ou privé, pour tous vos déplacements à Paris et ses environs.</p>
+      <h1 class="hero-in" style="--d:.08s">Transport PMR et Taxi Conventionné Val-d’Oise (95) <em class="nowrap">24/7</em></h1>
+      <p class="hero__lead hero-in" style="--d:.16s">Réservez facilement votre taxi PMR, conventionné ou privé, pour tous vos déplacements dans le Val-d’Oise et en Île-de-France.</p>
       <div class="btn-row hero-in" style="--d:.24s">
         <a class="btn btn--light" href="${book}">Réservez maintenant ${icon('arrow')}</a>
         <a class="btn btn--outline-light" href="tel:${SITE.phones[0].tel}">${icon('phone')}${SITE.phones[0].label}</a>
@@ -197,11 +184,12 @@ ${testimonials()}
   </div>
 </section>
 
+${zonesSection()}
 ${ctaFinal()}`;
   return layout({
     path: '/', bookHref: book, body,
-    title: 'Taxi conventionné, privé et PMR 24/7 | TaxiValdoise',
-    description: 'Taxi conventionné CPAM, taxi privé et transport PMR dans le Val-d’Oise et en Île-de-France. Disponible 24h/24, 7j/7. Réservez en ligne ou par téléphone.',
+    title: 'Transport PMR et taxi conventionné Val-d’Oise (95) | TaxiValdoise',
+    description: 'Transport PMR en fauteuil roulant et taxi conventionné CPAM dans le Val-d’Oise (95) et en Île-de-France, 24h/24 et 7j/7. Réservez en ligne ou au 07 63 76 45 92.',
     jsonld: [business, { '@context': 'https://schema.org', '@type': 'WebSite', name: 'TaxiValdoise', url: `${SITE.url}/` }],
   });
 }
@@ -234,7 +222,7 @@ function conventionne() {
   const book = '#formulaire-medicalise';
   const card = (title, image, extra = {}) => svcCard({ title, image, href: book, cta: 'Réserver', size: 'short', sizes: '(max-width: 460px) 100vw, (max-width: 1100px) 50vw, 25vw', ov: .55, ...extra });
   const body = `
-${pageHero({ image: 'svc-medical', pos: '50% 35%', crumb: 'Taxi conventionné', eyebrow: 'Agréé CPAM', title: 'Taxi médical conventionné', lead: 'Dialyse, kiné, hospitalisation, rendez-vous spécialisés : vos trajets de santé pris en charge par l’Assurance Maladie, sur prescription médicale.', cta: 'Réserver mon trajet', ctaHref: book })}
+${pageHero({ image: 'svc-medical', pos: '50% 35%', crumb: 'Taxi conventionné', eyebrow: 'Agréé CPAM', title: 'Taxi conventionné CPAM dans le Val-d’Oise (95)', lead: 'Dialyse, kiné, hospitalisation, rendez-vous spécialisés : vos trajets de santé pris en charge par l’Assurance Maladie, sur prescription médicale.', cta: 'Réserver mon trajet', ctaHref: book })}
 
 <section class="section">
   <div class="wrap">
@@ -297,12 +285,14 @@ ${vehiclesBlock(book)}
 
 ${partners()}
 ${testimonials()}
+<section class="section section--tight"><div class="wrap">${head({ title: 'Vos trajets réguliers', text: 'Découvrez nos pages dédiées pour la <a href="/taxi-dialyse-95">dialyse</a>, la <a href="/taxi-chimiotherapie-radiotherapie-95">chimiothérapie et la radiothérapie</a>, et <a href="/bon-de-transport-cpam">le fonctionnement du bon de transport CPAM</a>.' })}</div></section>
+${zonesSection({ title: 'Taxi conventionné dans tout le Val-d’Oise' })}
 ${bookingSection({ mode: 'conventionne', id: 'formulaire-medicalise', eyebrow: 'Réservation en ligne', title: 'Réservez votre transport médical en toute sérénité', text: 'Remplissez simplement le formulaire pour réserver votre trajet avec un taxi agréé CPAM. Nous confirmons rapidement chaque demande !' })}
 ${contactCards()}
 ${ctaFinal()}`;
   return layout({
     path: '/taximedicalise', bookHref: book, body,
-    title: 'Taxi conventionné CPAM dans le Val-d’Oise | TaxiValdoise',
+    title: 'Taxi conventionné CPAM Val-d’Oise (95), dialyse | TaxiValdoise',
     description: 'Taxi conventionné agréé CPAM : dialyse, kiné, hospitalisation. Prise en charge jusqu’à 100 % sur prescription, sans avance de frais. Réservation 24h/24, 7j/7.',
     jsonld: [business, { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQ_CONV.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: stripTags(a) } })) }],
   });
@@ -393,7 +383,7 @@ ${ctaFinal()}`;
 function pmr() {
   const book = '#formulaire-pmr';
   const body = `
-${pageHero({ image: 'pmr-hero', crumb: 'Transport PMR', eyebrow: 'Fauteuil roulant, mobilité réduite', title: 'Transport de personnes à mobilité réduite (TPMR)', lead: 'Des véhicules adaptés, des chauffeurs formés et un accompagnement bienveillant, en conventionné comme en privé.', cta: 'Réserver mon trajet', ctaHref: book })}
+${pageHero({ image: 'pmr-hero', crumb: 'Transport PMR', eyebrow: 'Fauteuil roulant, mobilité réduite', title: 'Transport PMR et taxi fauteuil roulant dans le Val-d’Oise (95)', lead: 'Des véhicules adaptés, des chauffeurs formés et un accompagnement bienveillant, en conventionné comme en privé.', cta: 'Réserver mon trajet', ctaHref: book })}
 
 <section class="section">
   <div class="wrap split">
@@ -401,7 +391,7 @@ ${pageHero({ image: 'pmr-hero', crumb: 'Transport PMR', eyebrow: 'Fauteuil roula
       <span class="eyebrow">Des solutions adaptées à tous</span>
       <h2>Un service de transport adapté aux PMR</h2>
       <p>Chez Taxi Val d’Oise, nous proposons un service de transport pensé pour <strong>les personnes en situation de handicap ou à mobilité réduite</strong>, ponctuel ou régulier. Grâce à des <strong>véhicules adaptés</strong>, des <strong>chauffeurs formés</strong> et un accompagnement bienveillant, nous facilitons vos trajets médicaux, personnels ou professionnels en toute autonomie.</p>
-      <p>Nous intervenons partout en Île-de-France, avec un seul objectif : <strong>vous rendre la mobilité simple et sereine.</strong></p>
+      <p>Nous intervenons dans tout le Val-d’Oise et en Île-de-France, avec un seul objectif : <strong>vous rendre la mobilité simple et sereine.</strong> Découvrez notre <a href="/transport-fauteuil-roulant-95">taxi pour fauteuil roulant</a> et notre <a href="/transport-personnes-agees-95">transport de personnes âgées</a>.</p>
       ${ticks(['Chauffeurs formés à la prise en charge des personnes à mobilité réduite', 'Véhicules avec rampe d’accès et équipements sécurisés', 'Confort, ponctualité et respect de la dignité du passager', 'Réservation simple 24h/24, par téléphone ou formulaire en ligne', 'Adapté aux personnes en situation de handicap (fauteuil roulant, mobilité réduite, etc.)', 'Prise en charge possible par la CPAM (transport conventionné)', 'Suivi personnalisé et réactif pour chaque demande', 'Disponibilité 7j/7 pour tous types de trajets'])}
     </div>
     <div class="split__media reveal">
@@ -469,13 +459,14 @@ ${pageHero({ image: 'pmr-hero', crumb: 'Transport PMR', eyebrow: 'Fauteuil roula
 
 ${steps('Réserver un transport PMR n’a jamais été aussi facile. Et si vous avez une prescription médicale, c’est votre caisse d’assurance qui prend tout en charge.', 'Réservez maintenant', book)}
 ${testimonials().replace('section section--tint', 'section')}
+${zonesSection({ title: 'Transport PMR dans tout le Val-d’Oise' })}
 ${bookingSection({ mode: 'pmr', id: 'formulaire-pmr', eyebrow: 'Réservation en ligne', title: 'Réservez votre transport PMR, médical ou privé', text: 'Remplissez simplement le formulaire pour réserver votre trajet avec un taxi spécialisé PMR. Nous confirmons rapidement chaque demande !' })}
 ${contactCards()}
 ${ctaFinal()}`;
   return layout({
     path: '/taxipmr', bookHref: book, body,
-    title: 'Transport PMR et taxi fauteuil roulant Val-d’Oise | TaxiValdoise',
-    description: 'Transport de personnes à mobilité réduite : véhicules avec rampe et arrimage, chauffeurs formés, prise en charge CPAM possible. Île-de-France, 24h/24 et 7j/7.',
+    title: 'Transport PMR et taxi fauteuil roulant Val-d’Oise (95) | TaxiValdoise',
+    description: 'Transport PMR dans le Val-d’Oise (95) : véhicules avec rampe et arrimage pour fauteuil roulant, chauffeurs formés, prise en charge CPAM possible. 24h/24 et 7j/7.',
     jsonld: [business],
   });
 }
@@ -506,7 +497,15 @@ ${contactCards()}`;
 function blog() {
   const body = `
 ${pageHero({ image: 'bg-taxi-nuit', crumb: 'Blog', title: 'Blog &amp; articles', lead: 'Nos conseils et informations utiles autour du transport privé et médicalisé.' })}
-<section class="section"><div class="wrap posts">${postCard()}</div></section>
+<section class="section"><div class="wrap posts">${postCard()}
+<article class="post-card reveal">
+  ${img('medecin', { alt: 'Médecin rédigeant une prescription', sizes: '(max-width: 600px) 100vw, 33vw' })}
+  <div>
+    <span class="eyebrow">Taxi conventionné</span>
+    <h3><a href="/bon-de-transport-cpam">Bon de transport CPAM : comment ça marche ?</a></h3>
+    <p>Prescription, accord préalable, taxi conventionné, VSL ou ambulance : les étapes pour préparer un trajet médical.</p>
+  </div>
+</article></div></section>
 ${ctaFinal()}`;
   return layout({
     path: '/blog', bookHref: '/#formulaire-accueil', body,
@@ -536,7 +535,8 @@ ${ctaFinal()}`;
     path: '/transport-pmr-95', bookHref: '/taxipmr#formulaire-pmr', body, ogType: 'article',
     title: 'Transport PMR 95 : le guide complet | TaxiValdoise',
     description: 'Tout savoir sur le transport PMR dans le Val-d’Oise : véhicules adaptés, prise en charge, hôpitaux desservis, tarifs et conseils pour bien choisir.',
-    jsonld: [{ '@context': 'https://schema.org', '@type': 'Article', headline: 'Transport PMR 95 : le guide complet', datePublished: '2025-11-25', image: `${SITE.url}/assets/img/og-image.jpg`, author: { '@type': 'Organization', name: 'TaxiValdoise' }, publisher: { '@type': 'Organization', name: 'TaxiValdoise' } }],
+    breadcrumb: [['Blog', '/blog'], ['Transport PMR 95', '/transport-pmr-95']],
+    jsonld: [business, { '@context': 'https://schema.org', '@type': 'Article', headline: 'Transport PMR 95 : le guide complet', datePublished: '2025-11-25', image: `${SITE.url}/assets/img/og-image.jpg`, author: { '@id': `${SITE.url}/#entreprise` }, publisher: { '@id': `${SITE.url}/#entreprise` } }],
   });
 }
 
@@ -662,6 +662,7 @@ ${pageHero({ image: 'bg-podium', crumb: title, title })}
 });
 
 export const PAGES = {
+  ...LOCAL_PAGES,
   'index.html': home,
   'taximedicalise.html': conventionne,
   'taxiprive.html': prive,
@@ -676,4 +677,4 @@ export const PAGES = {
   '404.html': () => simple('/404', 'Page introuvable', 'Cette page n’existe pas ou a été déplacée.'),
 };
 
-export const SITEMAP = ['/', '/taximedicalise', '/taxiprive', '/taxipmr', '/contact', '/blog', '/transport-pmr-95', '/mentions-legales', '/confidentialite'];
+export const SITEMAP = ['/', '/taxipmr', '/taximedicalise', '/taxiprive', ...LOCAL_SITEMAP, '/contact', '/blog', '/transport-pmr-95', '/mentions-legales', '/confidentialite'];
